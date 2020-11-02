@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TaskList</string>
+    <string name="important_urgent">IMPORTANT URGENT</string>
+    <string name="important_not_urgent">IMPORTANT NOT URGENT</string>
+    <string name="not_important_urgent">NOT IMPORTANT URGENT</string>
+    <string name="not_important_not_urgent">NOT IMPORTANT NOT URGENT</string>
+    <string name="notification_text">Время выполнять задание!</string>
+</resources>
