@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -25,7 +27,7 @@ import java.util.*
 class TaskFragment : MvpAppCompatFragment(), ITaskView {
 
     private lateinit var toolbar: MaterialToolbar
-    private lateinit var dateBtn: Button
+    private lateinit var dateBtn: TextView
     private lateinit var titleEditText: TextInputEditText
     private lateinit var detailsEditText: TextInputEditText
     private lateinit var titleTextInputLayout: TextInputLayout
@@ -69,10 +71,6 @@ class TaskFragment : MvpAppCompatFragment(), ITaskView {
 
         dateBtn.setOnClickListener {
             presenter.onDateBtnClicked()
-        }
-
-        notificationSwitch.setOnCheckedChangeListener { switchView, isChecked ->
-            presenter.onSwitchCheckedChange(isChecked)
         }
 
         if (savedInstanceState == null) {
@@ -125,6 +123,10 @@ class TaskFragment : MvpAppCompatFragment(), ITaskView {
         super.onSaveInstanceState(outState)
     }
 
+    override fun showToast() {
+        Toast.makeText(requireContext(), "Введите название!", Toast.LENGTH_LONG).show()
+    }
+
     override fun goBack() {
         requireActivity().finish()
     }
@@ -162,6 +164,7 @@ class TaskFragment : MvpAppCompatFragment(), ITaskView {
                 toolbar.title = context?.getString(R.string.important_urgent)
                 toolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorRed))
                 dateBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorRed))
+                dateBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.text_view_border_red)
                 titleTextInputLayout.hintTextColor = ContextCompat.getColorStateList(requireContext(), R.color.colorRed)
                 titleTextInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.colorRed)
                 detailsTextInputLayout.hintTextColor = ContextCompat.getColorStateList(requireContext(), R.color.colorRed)
@@ -171,6 +174,7 @@ class TaskFragment : MvpAppCompatFragment(), ITaskView {
                 toolbar.title = context?.getString(R.string.important_not_urgent)
                 toolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorGreen))
                 dateBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorGreen))
+                dateBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.text_view_border_green)
                 titleTextInputLayout.hintTextColor = ContextCompat.getColorStateList(requireContext(), R.color.colorGreen)
                 titleTextInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.colorGreen)
                 detailsTextInputLayout.hintTextColor = ContextCompat.getColorStateList(requireContext(), R.color.colorGreen)
@@ -180,6 +184,7 @@ class TaskFragment : MvpAppCompatFragment(), ITaskView {
                 toolbar.title = context?.getString(R.string.not_important_urgent)
                 toolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorOrange))
                 dateBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorOrange))
+                dateBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.text_view_border_orange)
                 titleTextInputLayout.hintTextColor = ContextCompat.getColorStateList(requireContext(), R.color.colorOrange)
                 titleTextInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.colorOrange)
                 detailsTextInputLayout.hintTextColor = ContextCompat.getColorStateList(requireContext(), R.color.colorOrange)
@@ -189,16 +194,13 @@ class TaskFragment : MvpAppCompatFragment(), ITaskView {
                 toolbar.title = context?.getString(R.string.not_important_not_urgent)
                 toolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorBlue))
                 dateBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlue))
+                dateBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.text_view_border_blue)
                 titleTextInputLayout.hintTextColor = ContextCompat.getColorStateList(requireContext(), R.color.colorBlue)
                 titleTextInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.colorBlue)
                 detailsTextInputLayout.hintTextColor = ContextCompat.getColorStateList(requireContext(), R.color.colorBlue)
                 detailsTextInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.colorBlue)
             }
         }
-    }
-
-    override fun setDateBtnEnabled(enable: Boolean) {
-        dateBtn.isEnabled = enable
     }
 
     override fun setNotificationSwitchChecked(isChecked: Boolean) {

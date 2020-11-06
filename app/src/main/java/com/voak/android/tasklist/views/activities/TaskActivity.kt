@@ -33,13 +33,6 @@ class TaskActivity : BaseActivity() {
 
             return intent
         }
-
-        fun newIntent(context: Context, taskId: ByteArray): Intent {
-            val intent = Intent(context, TaskActivity::class.java)
-            intent.putExtra(EXTRA_TASK_ID_AS_BYTES, taskId)
-
-            return intent
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

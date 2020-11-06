@@ -22,6 +22,7 @@ interface ITaskView : MvpView {
     fun setDetails(details: String)
     @StateStrategyType(value = OneExecutionStateStrategy::class)
     fun setViewsColor(type: Int)
-    fun setDateBtnEnabled(enable: Boolean)
     fun setNotificationSwitchChecked(isChecked: Boolean)
+    @StateStrategyType(value = SkipStrategy::class)
+    fun showToast()
 }

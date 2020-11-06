@@ -20,6 +20,9 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE is_finished = 0 AND need_notification = 1")
     fun getNeedNotificationActiveTasks(): Flowable<List<Task>>
 
+    @Query("DELETE FROM task WHERE task_type = :type AND is_finished = 1")
+    fun deleteAllFinishedTasksByType(type: Int): Completable
+
     @Update
     fun update(task: Task): Completable
 

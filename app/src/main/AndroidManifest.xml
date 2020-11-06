@@ -12,8 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.activities.TaskActivity"></activity>
-        <activity android:name=".views.activities.MainActivity">
+        <activity android:name=".views.activities.DetailedTaskListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".views.activities.TaskActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".views.activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,18 +26,19 @@
         </activity>
 
         <service android:name=".services.StartupService" />
-        <receiver android:name=".services.StartupReceiver"
+
+        <receiver
+            android:name=".services.StartupReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".services.AlarmReceiver"
+        <receiver
+            android:name=".services.AlarmReceiver"
             android:enabled="true"
-            android:exported="false">
-        </receiver>
+            android:exported="false"/>
     </application>
 
 </manifest>

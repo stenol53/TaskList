@@ -9,7 +9,9 @@ import com.voak.android.tasklist.R
 import com.voak.android.tasklist.db.entities.Task
 import java.util.*
 
-class TaskListAdapter(private val holderOnClick: (String) -> Unit) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
+class TaskListAdapter(
+    private val clickCallback: IRecyclerViewClickCallback
+) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>(), ItemTouchHelperAdapter {
 
     private var tasks = Collections.emptyList<Task>()
 
@@ -28,6 +30,17 @@ class TaskListAdapter(private val holderOnClick: (String) -> Unit) : RecyclerVie
         return tasks.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
+    }
+
+    override fun getSwipedItem(position: Int): Task {
+        val task = tasks.removeAt(position)
+        notifyItemRemoved(position)
+
+        return task
+    }
+
     fun setTasks(tasks: List<Task>) {
         this.tasks = tasks
         notifyDataSetChanged()
@@ -39,7 +52,7 @@ class TaskListAdapter(private val holderOnClick: (String) -> Unit) : RecyclerVie
 
         init {
             itemView.setOnClickListener {
-                holderOnClick(task.id.toString())
+                clickCallback.onItemClick(task.id.toString())
             }
         }
 

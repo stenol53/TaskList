@@ -31,6 +31,7 @@ class MainActivity : BaseActivity(), IMainView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(getLayoutRes())
 
         if (savedInstanceState == null) {
             viewRouter.setUpMainActivityFragments()

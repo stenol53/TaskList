@@ -7,6 +7,8 @@ import com.voak.android.tasklist.db.dao.TaskDao
 import com.voak.android.tasklist.di.modules.AppModule
 import com.voak.android.tasklist.di.modules.DatabaseModule
 import com.voak.android.tasklist.navigation.ViewRouter
+import com.voak.android.tasklist.presenters.ActiveTaskListPresenter
+import com.voak.android.tasklist.presenters.FinishedTaskListPresenter
 import com.voak.android.tasklist.presenters.TaskListPresenter
 import com.voak.android.tasklist.presenters.TaskPresenter
 import com.voak.android.tasklist.services.StartupService
@@ -27,6 +29,8 @@ interface AppComponent {
     // Presenters
     fun inject(presenter: TaskPresenter)
     fun inject(presenter: TaskListPresenter)
+    fun inject(presenter: ActiveTaskListPresenter)
+    fun inject(presenter: FinishedTaskListPresenter)
 
     // Services
     fun inject(service: StartupService)

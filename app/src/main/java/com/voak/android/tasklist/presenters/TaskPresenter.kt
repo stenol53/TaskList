@@ -11,6 +11,7 @@ import com.voak.android.tasklist.base.BaseApp
 import com.voak.android.tasklist.db.dao.TaskDao
 import com.voak.android.tasklist.db.entities.Task
 import com.voak.android.tasklist.services.AlarmReceiver
+import com.voak.android.tasklist.utils.AlarmHelper
 import com.voak.android.tasklist.views.interfaces.ITaskView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -64,10 +65,6 @@ class TaskPresenter : MvpPresenter<ITaskView>() {
         Log.i(TaskPresenter::class.simpleName, date.time.toString())
     }
 
-    fun onSwitchCheckedChange(isChecked: Boolean) {
-        viewState.setDateBtnEnabled(isChecked)
-    }
-
     @SuppressLint("CheckResult")
     fun onCreateView(taskId: String) {
         isNewTask = false
@@ -83,7 +80,6 @@ class TaskPresenter : MvpPresenter<ITaskView>() {
                 }
                 viewState.setNotificationSwitchChecked(task.needNotification)
                 viewState.setViewsColor(task.taskType)
-                viewState.setDateBtnEnabled(task.needNotification)
             },
             {
                 Log.e(TaskPresenter::class.simpleName, it.message.orEmpty())
@@ -105,18 +101,19 @@ class TaskPresenter : MvpPresenter<ITaskView>() {
 
     @SuppressLint("CheckResult")
     fun onAcceptBtnClicked(title: String, details: String, needNotification: Boolean) {
-        task.title = title
-        task.details = details
-        task.needNotification = needNotification
-
-        Log.i(this::class.simpleName, task.needNotification.toString())
-
-        if (isNewTask) {
-            insertTask()
+        if (title.isEmpty()) {
+            viewState.showToast()
         } else {
-            updateTask()
-        }
+            task.title = title
+            task.details = details
+            task.needNotification = needNotification
 
+            if (isNewTask) {
+                insertTask()
+            } else {
+                updateTask()
+            }
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -126,7 +123,14 @@ class TaskPresenter : MvpPresenter<ITaskView>() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 task.id = it.toInt()
-                startAlarm()
+                //startAlarm()
+
+                if (task.needNotification) {
+                    AlarmHelper.startAlarm(context, task)
+                } else {
+                    AlarmHelper.cancelAlarm(context, task)
+                }
+
                 viewState.goBack()
             },{
                 Log.e(TaskPresenter::class.simpleName, it.message.orEmpty())
@@ -139,7 +143,12 @@ class TaskPresenter : MvpPresenter<ITaskView>() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                startAlarm()
+//                startAlarm()
+                if (task.needNotification && !task.isFinished) {
+                    AlarmHelper.startAlarm(context, task)
+                } else {
+                    AlarmHelper.cancelAlarm(context, task)
+                }
                 viewState.goBack()
                 SimpleDateFormat.getDateInstance().calendar.time.time
             },{

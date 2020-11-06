@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.MvpAppCompatFragment
@@ -14,13 +15,14 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.material.card.MaterialCardView
 import com.voak.android.tasklist.R
-import com.voak.android.tasklist.adapters.TaskListAdapter
+import com.voak.android.tasklist.adapters.*
 import com.voak.android.tasklist.db.entities.Task
 import com.voak.android.tasklist.presenters.TaskListPresenter
+import com.voak.android.tasklist.views.activities.DetailedTaskListActivity
 import com.voak.android.tasklist.views.activities.TaskActivity
 import com.voak.android.tasklist.views.interfaces.ITaskListVIew
 
-class TaskListFragment : MvpAppCompatFragment(), ITaskListVIew {
+class TaskListFragment : MvpAppCompatFragment(), ITaskListVIew, IRecyclerViewClickCallback, ISwipeCallback {
 
     private lateinit var title: TextView
     private lateinit var line: View
@@ -46,8 +48,15 @@ class TaskListFragment : MvpAppCompatFragment(), ITaskListVIew {
         cardView = view.findViewById(R.id.cardView)
         recycler = view.findViewById(R.id.task_list)
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = TaskListAdapter() { id ->
-            presenter.onItemClicked(id)
+        recycler.adapter = TaskListAdapter(this)
+
+        val taskListCallback = SwipeCallback(recycler.adapter as ItemTouchHelperAdapter, this)
+
+        val touchHelper = ItemTouchHelper(taskListCallback)
+        touchHelper.attachToRecyclerView(recycler)
+
+        title.setOnClickListener {
+            presenter.onTitleClicked()
         }
 
         setViews()
@@ -96,6 +105,23 @@ class TaskListFragment : MvpAppCompatFragment(), ITaskListVIew {
 
     override fun openTaskActivity(taskId: String) {
         startActivity(TaskActivity.newIntentById(requireContext(), taskId))
+    }
+
+    override fun openDetailedTaskListActivity() {
+        startActivity(DetailedTaskListActivity.newIntent(requireContext(),
+            requireArguments().getInt(ARG_TASK_TYPE)))
+    }
+
+    override fun onItemClick(taskId: String) {
+        presenter.onItemClicked(taskId)
+    }
+
+    override fun onSwipeLeft(task: Task) {
+        presenter.onItemSwipedLeft(task)
+    }
+
+    override fun onSwipeRight(task: Task) {
+        presenter.onItemSwipedRight(task)
     }
 
     companion object {
