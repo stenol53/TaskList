@@ -12,7 +12,9 @@ import com.voak.android.tasklist.db.dao.TaskDao
 import com.voak.android.tasklist.db.entities.Task
 import com.voak.android.tasklist.services.AlarmReceiver
 import com.voak.android.tasklist.utils.AlarmHelper
+import com.voak.android.tasklist.utils.Constants
 import com.voak.android.tasklist.views.interfaces.detailed_task_list.IActiveTaskListFragmentView
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -32,18 +34,45 @@ class ActiveTaskListPresenter : MvpPresenter<IActiveTaskListFragmentView>() {
     }
 
     @SuppressLint("CheckResult")
-    fun onCreateView(type: Int) {
-        Log.i(this::class.simpleName, "onCreateView $type")
+    fun updateType(type: Int) {
         this.type = type
-        taskDao.getActiveTasksByType(type)
+        taskDao.getActiveTasksByTypeSingle(this.type)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ tasks ->
+//                Log.i(this::class.simpleName, "updateType ${this.type}")
                 viewState.setTasks(tasks)
             }, {
                 Log.e(this::class.simpleName, it.message.orEmpty())
             })
-        viewState.setButtonsColor(type)
+        viewState.setButtonsColor(this.type)
+    }
+
+    @SuppressLint("CheckResult")
+    fun onCreateView(type: Int) {
+        this.type = type
+
+        observeDb(Constants.IMPORTANT_URGENT)
+        observeDb(Constants.IMPORTANT_NOT_URGENT)
+        observeDb(Constants.NOT_IMPORTANT_URGENT)
+        observeDb(Constants.NOT_IMPORTANT_NOT_URGENT)
+
+        viewState.setButtonsColor(this.type)
+    }
+
+    @SuppressLint("CheckResult")
+    private fun observeDb(type: Int) {
+        taskDao.getActiveTasksByType(type)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ tasks ->
+                if (this.type == type) {
+//                    Log.i(this::class.simpleName, "onCreateView $type")
+                    viewState.setTasks(tasks)
+                }
+            }, {
+                Log.e(this::class.simpleName, it.message.orEmpty())
+            })
     }
 
     fun onAddTaskBtnClicked() {
@@ -66,7 +95,7 @@ class ActiveTaskListPresenter : MvpPresenter<IActiveTaskListFragmentView>() {
             }, {
                 Log.i(this::class.simpleName, it.message.orEmpty())
             })
-        viewState.setButtonsColor(type)
+//        viewState.setButtonsColor(type)
     }
 
     @SuppressLint("CheckResult")

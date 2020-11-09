@@ -14,6 +14,12 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE task_type = :type AND is_finished = 1")
     fun getFinishedTasksByType(type: Int): Flowable<List<Task>>
 
+    @Query("SELECT * FROM task WHERE task_type = :type AND is_finished = 0")
+    fun getActiveTasksByTypeSingle(type: Int): Single<List<Task>>
+
+    @Query("SELECT * FROM task WHERE task_type = :type AND is_finished = 1")
+    fun getFinishedTasksByTypeSingle(type: Int): Single<List<Task>>
+
     @Query("SELECT * FROM task WHERE id = :id")
     fun getTaskById(id: Int): Flowable<List<Task>>
 

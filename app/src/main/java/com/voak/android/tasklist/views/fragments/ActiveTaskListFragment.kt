@@ -102,8 +102,7 @@ class ActiveTaskListFragment : MvpAppCompatFragment(), IActiveTaskListFragmentVi
     }
 
     override fun updateType(type: Int) {
-        Log.i(this::class.simpleName, "updateType $type")
-        presenter.onCreateView(type)
+        presenter.updateType(type)
     }
 
     fun setActivityCallback(callback: IActivityCallback) {

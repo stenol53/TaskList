@@ -62,8 +62,6 @@ class TaskListFragment : MvpAppCompatFragment(), ITaskListVIew, IRecyclerViewCli
         setViews()
         presenter.onCreateView()
 
-        Log.i(TaskListFragment::class.simpleName, "onCreateView: $presenter")
-
         return view
     }
 

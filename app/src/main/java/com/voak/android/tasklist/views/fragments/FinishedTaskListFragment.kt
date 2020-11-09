@@ -1,6 +1,7 @@
 package com.voak.android.tasklist.views.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -88,7 +89,7 @@ class FinishedTaskListFragment : MvpAppCompatFragment(), IFinishedTaskListFragme
     }
 
     override fun updateType(type: Int) {
-        presenter.onCreateView(type)
+        presenter.updateType(type)
     }
 
     override fun openTaskActivity(id: String) {

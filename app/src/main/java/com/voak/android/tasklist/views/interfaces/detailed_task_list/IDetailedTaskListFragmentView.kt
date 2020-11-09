@@ -6,7 +6,7 @@ import com.voak.android.tasklist.db.entities.Task
 
 @StateStrategyType(value = AddToEndSingleStrategy::class)
 interface IDetailedTaskListFragmentView : MvpView {
-    @StateStrategyType(value = OneExecutionStateStrategy::class)
+    @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun setTasks(tasks: List<Task>)
     @StateStrategyType(value = SkipStrategy::class)
     fun openTaskActivity(id: String)

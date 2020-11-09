@@ -1,5 +1,6 @@
 package com.voak.android.tasklist.presenters
 
+import android.view.View
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.voak.android.tasklist.views.interfaces.IMainView
@@ -7,16 +8,16 @@ import com.voak.android.tasklist.views.interfaces.IMainView
 @InjectViewState
 class MainActivityPresenter() : MvpPresenter<IMainView>() {
 
-    private var needFade: Boolean = false
-
-
     fun onAddTaskBtnAction() {
-        needFade = !needFade
-        viewState.startAnimation(needFade)
+        viewState.changeAddBtnVisibility(false)
     }
 
-    fun onColoredBtnAction(type: Int) {
+    fun onDropActionTrue(type: Int) {
         viewState.openTaskActivity(type)
-        onAddTaskBtnAction()
+        viewState.changeAddBtnVisibility(true)
+    }
+
+    fun onDropActionFalse() {
+        viewState.changeAddBtnVisibility(true)
     }
 }
